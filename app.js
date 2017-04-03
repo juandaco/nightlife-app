@@ -52,9 +52,10 @@ app.use('/api/users', usersRouter);
 /*
   Serve the Single Page App
 */
-app.use(express.static('public'));
+// app.use(express.static('public'));
 app.get('*', function(req, res) { // Catches unknown adress and redirects to SPA
-  res.sendfile(__dirname + '/public/index.html');
+  console.log(req.url);
+  // res.sendfile(__dirname + '/public/index.html');
 });
 
 // catch 404 and forward to error handler

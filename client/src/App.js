@@ -1,20 +1,43 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+  constructor(props) {
+    super(props);
+    this.state = {
+      userLatitude: null,
+      userLongitud: null,
+    };
+
+    // Function Bindings
+    this.getUserLocation = this.getUserLocation.bind(this);
+    this.getPlacesData = this.getPlacesData.bind(this);
+  }
+
+  componentDidMount() {
+    this.getUserLocation();
+  }
+
+  getUserLocation() {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        this.setState({
+          userLatitude: pos.coords.latitude,
+          userLongitud: pos.coords.longitude,
+        });
+        this.getPlacesData();
+      },
+      err => {
+        console.log(err);
+      },
     );
+  }
+
+  getPlacesData() {
+
+  }
+
+  render() {
+    return <div className="App" />;
   }
 }
 
