@@ -12,6 +12,7 @@ const MongoStore = require('connect-mongo')(session);
 // Load Routes
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
+const placesRouter = require('./routes/places');
 
 // Initialize Express App
 const app = express();
@@ -48,13 +49,13 @@ app.use(passport.session());
 */
 app.use('/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/places', placesRouter);
 
 /*
   Serve the Single Page App
 */
 // app.use(express.static('public'));
 app.get('*', function(req, res) { // Catches unknown adress and redirects to SPA
-  console.log(req.url);
   // res.sendfile(__dirname + '/public/index.html');
 });
 

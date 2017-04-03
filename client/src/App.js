@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import ApiCalls from './ApiCalls';
+// Components
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userLatitude: null,
-      userLongitud: null,
+      location: '',
+      placesData: [],
     };
 
     // Function Bindings
@@ -21,8 +23,7 @@ class App extends Component {
     navigator.geolocation.getCurrentPosition(
       pos => {
         this.setState({
-          userLatitude: pos.coords.latitude,
-          userLongitud: pos.coords.longitude,
+          location: `${pos.coords.latitude},${pos.coords.longitude}`,
         });
         this.getPlacesData();
       },
@@ -33,7 +34,15 @@ class App extends Component {
   }
 
   getPlacesData() {
-
+    ApiCalls.getPlacesData(this.state.location)
+      .then(places => {
+        this.setState({
+          placesData: places.results,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   render() {
