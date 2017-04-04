@@ -9,8 +9,9 @@ placesRouter.get('/data', function(req, res, next) {
     qs: {
       key: process.env.GOOGLE_PLACES_API_KEY,
       location: req.query.location,
-      radius: 500,
-      types: 'food'
+      radius: 3000,
+      opennow: true,
+      type: 'restaurant'
     },
     headers: {
       'User-Agent': 'Request-Promise'
