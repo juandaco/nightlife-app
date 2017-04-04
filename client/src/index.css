@@ -1,4 +1,24 @@
-html, body {
+html,
+body {
   padding: 0; }
+
+.cards-container {
+  display: flex;
+  width: 80vw;
+  max-height: 8000px;
+  align-items: center;
+  flex-flow: column wrap;
+  justify-content: flex-start; }
+
+@media (max-width: 1300px) {
+  .cards-container {
+    max-height: 6500px; } }
+@media (max-width: 1150px) {
+  .cards-container {
+    max-height: 6000px; } }
+@media (max-width: 900px) {
+  .cards-container {
+    width: 100%;
+    max-height: 100%; } }
 
 /*# sourceMappingURL=index.css.map */

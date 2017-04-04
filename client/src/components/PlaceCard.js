@@ -43,8 +43,8 @@ class PlaceCard extends Component {
   render() {
     const cardStyle = {
       width: '35vw',
-      minWidth: 360,
-      margin: '30px auto',
+      minWidth: 350,
+      margin: '10px 10px',
       textAlign: 'left',
     };
     return (
@@ -63,11 +63,11 @@ class PlaceCard extends Component {
             labelPosition="before"
             icon={
               this.state.going
-                ? <SvgIconGoing style={{ width: 20, leftMaring: -5 }}/>
+                ? <SvgIconGoing style={{ width: 20, leftMaring: -5 }} />
                 : <SvgIconAdd style={{ width: 20 }} />
             }
             onClick={this.handleChange}
-            style={{width: 100}}
+            style={{ width: 100 }}
           />
         </CardActions>
       </Card>

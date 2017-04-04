@@ -39,6 +39,7 @@ class App extends Component {
 
   getPlacesData(e) {
     if (e.key === 'Enter') {
+      e.target.blur();
       this.setState({ searching: true });
       ApiCalls.getPlacesData(this.state.searchValue)
         .then(places => {
@@ -78,11 +79,16 @@ class App extends Component {
         <div
           className="app-container"
           style={{
+            margin: 0,
+            padding: 0,
             paddingTop: 100,
-            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          <div className="search-field">
+          <div className="search-field" style={{ marginBottom: 40 }}>
             <TextField
               hintText="What's your City?"
               onChange={this.handleSearchChange}
@@ -90,18 +96,7 @@ class App extends Component {
             />
             <SvgIconSearch />
           </div>
-          <div
-            className="cards-container"
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '70vw',
-              minWidth: 360,
-            }}
-          >
+          <div className="cards-container">
             {this.state.searching
               ? <CircularProgress style={{ paddingTop: 50 }} />
               : null}
