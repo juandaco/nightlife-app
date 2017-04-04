@@ -7,89 +7,106 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 // Material UI Components
-import { AppBar, Drawer, MenuItem, CircularProgress, IconButton } from 'material-ui';
+import { CircularProgress, TextField } from 'material-ui';
+// Icons
+import SvgIconSearch from 'material-ui/svg-icons/action/search';
 
 //
 import ApiCalls from './ApiCalls';
 // Components
+import PlaceCard from './components/PlaceCard';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: '',
+      searchValue: '',
+      searching: false,
       placesData: [],
-      openDrawer: false,
     };
 
     // Function Bindings
-    this.getUserLocation = this.getUserLocation.bind(this);
     this.getPlacesData = this.getPlacesData.bind(this);
-    this.openDrawer = this.openDrawer.bind(this);
-    this.closeDrawer = this.closeDrawer.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.setupCards = this.setupCards.bind(this);
   }
 
-  componentDidMount() {
-    this.getUserLocation();
-  }
-
-  openDrawer() {
+  handleSearchChange(e) {
     this.setState({
-      openDrawer: true,
+      searchValue: e.target.value,
     });
   }
 
-  closeDrawer() {
-    this.setState({
-      openDrawer: false,
-    });
+  getPlacesData(e) {
+    if (e.key === 'Enter') {
+      this.setState({ searching: true });
+      ApiCalls.getPlacesData(this.state.searchValue)
+        .then(places => {
+          this.setState({
+            placesData: places,
+            searching: false,
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
-  getUserLocation() {
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        this.setState({
-          location: `${pos.coords.latitude},${pos.coords.longitude}`,
-        });
-        this.getPlacesData();
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  getPlacesData() {
-    ApiCalls.getPlacesData(this.state.location)
-      .then(places => {
-        this.setState({
-          placesData: places.results,
-        });
-      })
-      .catch(err => {
-        console.log(err);
+  setupCards() {
+    if (!this.state.searching) {
+      return this.state.placesData.map(place => {
+        return (
+          <PlaceCard
+            key={place.id}
+            placeID={place.id}
+            name={place.name}
+            photo={place.image_url}
+            url={place.url}
+          />
+        );
       });
+    } else {
+      return null;
+    }
   }
 
   render() {
+    const cards = this.setupCards();
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-        <div className="app-container">
-          <AppBar
-            title="Nightlife"
-            onLeftIconButtonTouchTap={this.openDrawer}
-            iconElementRight={<IconButton iconClassName="muidocs-icon-custom-github"/>}
-          />
-          <Drawer
-            docked={false}
-            open={this.state.openDrawer}
-            onRequestChange={open => this.setState({ openDrawer: open })}
-            swipeAreaWidth={100}
+        <div
+          className="app-container"
+          style={{
+            paddingTop: 100,
+            textAlign: 'center',
+          }}
+        >
+          <div className="search-field">
+            <TextField
+              hintText="What's your City?"
+              onChange={this.handleSearchChange}
+              onKeyPress={this.getPlacesData}
+            />
+            <SvgIconSearch />
+          </div>
+          <div
+            className="cards-container"
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '70vw',
+              minWidth: 360,
+            }}
           >
-            <MenuItem onTouchTap={this.closeDrawer}>Menu Item</MenuItem>
-            <MenuItem onTouchTap={this.closeDrawer}>Menu Item 2</MenuItem>
-          </Drawer>
-          {/*<CircularProgress size={40} thickness={5} />*/}
+            {this.state.searching
+              ? <CircularProgress style={{ paddingTop: 50 }} />
+              : null}
+            {cards}
+          </div>
         </div>
       </MuiThemeProvider>
     );

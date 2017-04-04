@@ -10,6 +10,14 @@ function getPlacesData(location) {
     .then(parseJSON);
 }
 
+function getPlaceReview(placeID) {
+  return fetch(`/api/places/${placeID}`, {
+    accept: 'application/json',
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
 function getUserData() {
   return fetch('/api/users/data', {
     accept: 'application/json',
@@ -57,6 +65,7 @@ function parseJSON(response) {
 
 const ApiCalls = {
   getPlacesData,
+  getPlaceReview,
   getUserData,
   verifyUser,
   userLogout,
