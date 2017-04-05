@@ -43,7 +43,7 @@ class PlaceCard extends Component {
     const cardStyle = {
       width: '35vw',
       minWidth: 350,
-      margin: '10px 10px',
+      margin: '15px 10px',
       textAlign: 'left',
     };
     return (

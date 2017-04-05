@@ -282,7 +282,7 @@ class App extends Component {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'flex-start',
-              minHeight: '94vh',
+              minHeight: '100vh',
             }}
           >
             <div id="title-container">
@@ -305,6 +305,7 @@ class App extends Component {
               style={{
                 fontFamily: "'Source Sans Pro', sans-serif",
                 fontStyle: 'italic',
+                marginRight: '6%',
                 marginTop: -20,
                 marginBottom: 60,
                 color: '#908f8f',
@@ -314,7 +315,7 @@ class App extends Component {
             </p>
             <div
               className="search-field"
-              style={{ marginBottom: 40, marginLeft: '2%' }}
+              style={{ marginBottom: 40, marginRight: '3%' }}
             >
               <TextField
                 hintText="What's your City?"
@@ -330,20 +331,20 @@ class App extends Component {
                 : null}
               {cards}
             </div>
-
           </div>
         </MuiThemeProvider>
         <a
           href="https://www.freecodecamp.com/juandaco"
           target="_blank"
           style={{
+            marginTop: -30,
+            marginRight: 10,
             fontFamily: 'cursive',
             fontWeight: 'bold',
             fontSize: 10,
             textDecoration: 'none',
             color: 'inherit',
             float: 'right',
-            marginRight: 10,
           }}
         >
           by <span id="synt4rt-logo">Synt4rt</span>
