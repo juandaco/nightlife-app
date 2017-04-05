@@ -305,7 +305,7 @@ class App extends Component {
               style={{
                 fontFamily: "'Source Sans Pro', sans-serif",
                 fontStyle: 'italic',
-                marginRight: '6%',
+                marginRight: '4%',
                 marginTop: -20,
                 marginBottom: 60,
                 color: '#908f8f',
@@ -315,7 +315,7 @@ class App extends Component {
             </p>
             <div
               className="search-field"
-              style={{ marginBottom: 40, marginRight: '3%' }}
+              style={{ marginBottom: 40, marginRight: '2%' }}
             >
               <TextField
                 hintText="What's your City?"
