@@ -19,6 +19,7 @@ yelp
     console.log(e);
   });
 
+// Routing
 placesRouter.get('/data', function(req, res, next) {
   client
     .search({
@@ -41,26 +42,30 @@ placesRouter.get('/count', function(req, res) {
 });
 
 placesRouter.put('/count/add', function(req, res) {
-  Places.updateOne(
-    { placeID: req.body.placeID },
-    { $inc: { people: 1 } },
-    { upsert: true },
-    function(err, data) {
-      if (err) throw err;
-      res.json(data);
-    }
-  );
+  if (req.isAuthenticated()) {
+    Places.updateOne(
+      { placeID: req.body.placeID },
+      { $inc: { people: 1 } },
+      { upsert: true },
+      function(err, data) {
+        if (err) throw err;
+        res.json(data);
+      }
+    );
+  }
 });
 
 placesRouter.put('/count/reduce', function(req, res) {
-  Places.updateOne(
-    { placeID: req.body.placeID },
-    { $inc: { people: -1 } },
-    function(err, data) {
-      if (err) throw err;
-      res.json(data);
-    }
-  );
+  if (req.isAuthenticated()) {
+    Places.updateOne(
+      { placeID: req.body.placeID },
+      { $inc: { people: -1 } },
+      function(err, data) {
+        if (err) throw err;
+        res.json(data);
+      }
+    );
+  }
 });
 
 placesRouter.get('/:placeID', function(req, res, next) {

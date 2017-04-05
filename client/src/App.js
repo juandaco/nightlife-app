@@ -39,6 +39,10 @@ class App extends Component {
     this.setupCards = this.setupCards.bind(this);
     this.addPlace = this.addPlace.bind(this);
     this.getPlacesCount = this.getPlacesCount.bind(this);
+    this.addUserPlace = this.addUserPlace.bind(this);
+    this.addPeople2Place = this.addPeople2Place.bind(this);
+    this.removeUserPlace = this.removeUserPlace.bind(this);
+    this.reducePeopleFromPlace = this.reducePeopleFromPlace.bind(this);
   }
 
   componentDidMount() {
@@ -108,72 +112,87 @@ class App extends Component {
     );
   }
 
-  addPlace(placeID) {
-    if (this.state.userLogged) {
-      // Add Place to to User
-      if (!this.state.userPlaces.includes(placeID)) {
-        ApiCalls.addUserPlace(placeID)
-          .then(resp => {
-            if (resp.nModified) {
-              let newPlaces = this.state.userPlaces.slice();
-              newPlaces.push(placeID);
-              this.setState({
-                userPlaces: newPlaces,
-              });
-            }
-          })
-          .catch(e => console.log(e));
-        ApiCalls.addPeople2Place(placeID).then(resp => {
-          if (resp.nModified || resp.upserted.length) {
-            let newPlacesCount = this.state.placesCount.slice();
-            let indexOfPlace;
-            const place = newPlacesCount.find((place, index) => {
-              indexOfPlace = index;
-              return place.placeID === placeID;
-            });
-            if (place) {
-              newPlacesCount[indexOfPlace].people++;
-            } else {
-              newPlacesCount.push({
-                placeID,
-                people: 1,
-              });
-            }
+  addUserPlace(placeID) {
+    ApiCalls.addUserPlace(placeID)
+      .then(resp => {
+        if (resp.nModified) {
+          let newPlaces = this.state.userPlaces.slice();
+          newPlaces.push(placeID);
+          this.setState({
+            userPlaces: newPlaces,
+          });
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
+  addPeople2Place(placeID) {
+    ApiCalls.addPeople2Place(placeID).then(resp => {
+      if (resp.nModified || resp.upserted.length) {
+        let newPlacesCount = this.state.placesCount.slice();
+        let indexOfPlace;
+        const place = newPlacesCount.find((place, index) => {
+          indexOfPlace = index;
+          return place.placeID === placeID;
+        });
+        if (place) {
+          newPlacesCount[indexOfPlace].people++;
+        } else {
+          newPlacesCount.push({
+            placeID,
+            people: 1,
+          });
+        }
+        this.setState({
+          placesCount: newPlacesCount,
+        });
+      }
+    });
+  }
+
+  removeUserPlace(placeID) {
+    ApiCalls.removeUserPlace(placeID)
+      .then(resp => {
+        if (resp.nModified) {
+          let newPlaces = this.state.userPlaces.slice();
+          newPlaces.splice(newPlaces.indexOf(placeID), 1);
+          this.setState({
+            userPlaces: newPlaces,
+          });
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
+  reducePeopleFromPlace(placeID) {
+    ApiCalls.reducePeopleFromPlace(placeID)
+      .then(resp => {
+        if (resp.nModified) {
+          let newPlacesCount = this.state.placesCount.slice();
+          let indexOfPlace;
+          const place = newPlacesCount.find((place, index) => {
+            indexOfPlace = index;
+            return place.placeID === placeID;
+          });
+          if (place) {
+            newPlacesCount[indexOfPlace].people--;
             this.setState({
               placesCount: newPlacesCount,
             });
           }
-        });
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
+  addPlace(placeID) {
+    if (this.state.userLogged) {
+      if (!this.state.userPlaces.includes(placeID)) {
+        this.addUserPlace(placeID);
+        this.addPeople2Place(placeID);
       } else {
-        ApiCalls.removeUserPlace(placeID)
-          .then(resp => {
-            if (resp.nModified) {
-              let newPlaces = this.state.userPlaces.slice();
-              newPlaces.splice(newPlaces.indexOf(placeID), 1);
-              this.setState({
-                userPlaces: newPlaces,
-              });
-            }
-          })
-          .catch(e => console.log(e));
-        ApiCalls.reducePeopleFromPlace(placeID)
-          .then(resp => {
-            if (resp.nModified) {
-              let newPlacesCount = this.state.placesCount.slice();
-              let indexOfPlace;
-              const place = newPlacesCount.find((place, index) => {
-                indexOfPlace = index;
-                return place.placeID === placeID;
-              });
-              if (place) {
-                newPlacesCount[indexOfPlace].people--;
-                this.setState({
-                  placesCount: newPlacesCount,
-                });
-              }
-            }
-          })
-          .catch(e => console.log(e));
+        this.removeUserPlace(placeID);
+        this.reducePeopleFromPlace(placeID);
       }
     } else {
       this.loginUser();
