@@ -271,41 +271,84 @@ class App extends Component {
   render() {
     const cards = this.setupCards();
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-        <div
-          className="app-container"
+      <div style={{ width: '100vw' }}>
+        <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+          <div
+            className="app-container"
+            style={{
+              margin: 0,
+              padding: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              minHeight: '94vh',
+            }}
+          >
+            <div id="title-container">
+              <SvgIconDrink id="title-icon" />
+              <h1 id="nightlife-title">
+                Nightlife!
+              </h1>
+              <p id="powered-by">
+                powered by
+                <a href="https://www.yelp.com" target="_blank">
+                  <img
+                    src="/logos/yelp_logo.svg"
+                    id="yelp-logo"
+                    alt="Yelp Logo"
+                  />
+                </a>
+              </p>
+            </div>
+            <p
+              style={{
+                fontFamily: "'Source Sans Pro', sans-serif",
+                fontStyle: 'italic',
+                marginTop: -20,
+                marginBottom: 60,
+                color: '#908f8f',
+              }}
+            >
+              Tell us were you'll be tonight!!!
+            </p>
+            <div
+              className="search-field"
+              style={{ marginBottom: 40, marginLeft: '2%' }}
+            >
+              <TextField
+                hintText="What's your City?"
+                value={this.state.searchValue}
+                onChange={this.handleSearchChange}
+                onKeyPress={this.handleSearchEnter}
+              />
+              <SvgIconSearch />
+            </div>
+            <div className="cards-container">
+              {this.state.searching
+                ? <CircularProgress style={{ paddingTop: 50 }} />
+                : null}
+              {cards}
+            </div>
+
+          </div>
+        </MuiThemeProvider>
+        <a
+          href="https://www.freecodecamp.com/juandaco"
+          target="_blank"
           style={{
-            margin: 0,
-            padding: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            fontFamily: 'cursive',
+            fontWeight: 'bold',
+            fontSize: 10,
+            textDecoration: 'none',
+            color: 'inherit',
+            float: 'right',
+            marginRight: 10,
           }}
         >
-          <div id="title-container">
-            <SvgIconDrink id="title-icon" />
-            <h1 id="nightlife-title">
-              Nightlife!
-            </h1>
-          </div>
-          <div className="search-field" style={{ marginBottom: 40 }}>
-            <TextField
-              hintText="What's your City?"
-              value={this.state.searchValue}
-              onChange={this.handleSearchChange}
-              onKeyPress={this.handleSearchEnter}
-            />
-            <SvgIconSearch />
-          </div>
-          <div className="cards-container">
-            {this.state.searching
-              ? <CircularProgress style={{ paddingTop: 50 }} />
-              : null}
-            {cards}
-          </div>
-        </div>
-      </MuiThemeProvider>
+          by <span id="synt4rt-logo">Synt4rt</span>
+        </a>
+      </div>
     );
   }
 }
