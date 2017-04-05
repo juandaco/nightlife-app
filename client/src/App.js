@@ -13,6 +13,7 @@ import SvgIconSearch from 'material-ui/svg-icons/action/search';
 
 //
 import ApiCalls from './ApiCalls';
+import config from './config';
 // Components
 import PlaceCard from './components/PlaceCard';
 
@@ -23,12 +24,84 @@ class App extends Component {
       searchValue: '',
       searching: false,
       placesData: [],
+      userLogged: false,
+      userPlaces: [],
+      userLastSearch: '',
     };
 
     // Function Bindings
+    this.verifyUser = this.verifyUser.bind(this);
     this.getPlacesData = this.getPlacesData.bind(this);
+    this.getUserData = this.getUserData.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleSearchEnter = this.handleSearchEnter.bind(this);
     this.setupCards = this.setupCards.bind(this);
+    this.addPlace = this.addPlace.bind(this);
+  }
+
+  componentDidMount() {
+    this.verifyUser();
+  }
+
+  verifyUser() {
+    ApiCalls.verifyUser()
+      .then(resp => {
+        if (resp.userLogged) {
+          this.getUserData();
+          this.setState({
+            userLogged: true,
+          });
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
+  getUserData() {
+    ApiCalls.getUserData()
+      .then(resp => {
+        if (resp.lastSearch) {
+          this.setState({
+            searchValue: resp.lastSearch,
+          });
+          this.getPlacesData();
+        }
+        this.setState({
+          userPlaces: resp.places,
+          userLastSearch: resp.lastSearch,
+        });
+      })
+      .catch(e => console.log(e));
+  }
+
+  loginUser() {
+    let w = 360;
+    let h = 560;
+    const left = screen.width / 2 - w / 2;
+    const top = screen.height / 2 - h / 2;
+    const windowOptions = `width=${w}, height=${h}, top=${top}, left=${left}`;
+    const authURL = `${config.appURL}/auth/twitter`;
+    const oAuthPopUp = window.open(authURL, 'Login', windowOptions);
+    // For AutoClosing the popUp once we get an answer
+    window.addEventListener(
+      'message',
+      e => {
+        if (e.data === 'closePopUp') {
+          oAuthPopUp.close();
+          this.verifyUser();
+          window.removeEventListener('message', function(e) {}, false);
+        }
+      },
+      false,
+    );
+  }
+
+  addPlace(placeID) {
+    if (this.state.userLogged) {
+      // Add to User
+    } else {
+      // Login User
+      this.loginUser();
+    }
   }
 
   handleSearchChange(e) {
@@ -37,21 +110,36 @@ class App extends Component {
     });
   }
 
-  getPlacesData(e) {
+  handleSearchEnter(e) {
     if (e.key === 'Enter') {
       e.target.blur();
-      this.setState({ searching: true });
-      ApiCalls.getPlacesData(this.state.searchValue)
-        .then(places => {
-          this.setState({
-            placesData: places,
-            searching: false,
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.getPlacesData();
+      if (this.state.userLogged) {
+        ApiCalls.setUserSearch(this.state.searchValue)
+          .then(resp => {
+            if (resp.nModified) {
+              this.setState({
+                userLastSearch: this.state.searchValue,
+              });
+            }
+          })
+          .catch(e => console.log(e));
+      }
     }
+  }
+
+  getPlacesData(e) {
+    this.setState({ searching: true });
+    ApiCalls.getPlacesData(this.state.searchValue)
+      .then(places => {
+        this.setState({
+          placesData: places,
+          searching: false,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   setupCards() {
@@ -64,6 +152,8 @@ class App extends Component {
             name={place.name}
             photo={place.image_url}
             url={place.url}
+            going={false}
+            addPlace={this.addPlace}
           />
         );
       });
@@ -91,8 +181,9 @@ class App extends Component {
           <div className="search-field" style={{ marginBottom: 40 }}>
             <TextField
               hintText="What's your City?"
+              value={this.state.searchValue}
               onChange={this.handleSearchChange}
-              onKeyPress={this.getPlacesData}
+              onKeyPress={this.handleSearchEnter}
             />
             <SvgIconSearch />
           </div>

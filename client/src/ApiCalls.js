@@ -18,8 +18,8 @@ function getPlaceReview(placeID) {
     .then(parseJSON);
 }
 
-function getUserData() {
-  return fetch('/api/users/data', {
+function verifyUser() {
+  return fetch(`/api/users/current`, {
     accept: 'application/json',
     credentials: 'include',
   })
@@ -27,10 +27,25 @@ function getUserData() {
     .then(parseJSON);
 }
 
-function verifyUser() {
-  return fetch(`/api/users/current`, {
+function getUserData() {
+  return fetch(`/api/users/data`, {
     accept: 'application/json',
     credentials: 'include',
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
+function setUserSearch(lastSearch) {
+  return fetch(`/api/users/search`, {
+    method: 'PUT',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    credentials: 'include',
+    body: JSON.stringify({
+      lastSearch,
+    }),
   })
     .then(checkStatus)
     .then(parseJSON);
@@ -67,6 +82,7 @@ const ApiCalls = {
   getPlacesData,
   getPlaceReview,
   getUserData,
+  setUserSearch,
   verifyUser,
   userLogout,
 };

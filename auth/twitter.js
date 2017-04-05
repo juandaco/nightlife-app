@@ -13,7 +13,7 @@ passport.use(
     },
     function(token, tokenSecret, profile, done) {
       const searchQuery = {
-        id: profile.id
+        twitterID: profile.id
       };
 
       // Customize your User

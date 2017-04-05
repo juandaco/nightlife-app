@@ -15,7 +15,7 @@ class PlaceCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      going: false,
+      placeID: this.props.placeID,
       review: '',
     };
     // Function Bindings
@@ -35,9 +35,7 @@ class PlaceCard extends Component {
   }
 
   handleChange() {
-    this.setState({
-      going: !this.state.going,
-    });
+    this.props.addPlace(this.state.placeID); 
   }
 
   render() {
@@ -59,10 +57,10 @@ class PlaceCard extends Component {
         <CardActions style={{ textAlign: 'right' }}>
           <FlatButton href={this.props.url} target="_blank" label="More Info" />
           <FlatButton
-            label={this.state.going ? 'Going' : 'Add'}
+            label={this.props.going ? 'Going' : 'Add'}
             labelPosition="before"
             icon={
-              this.state.going
+              this.props.going
                 ? <SvgIconGoing style={{ width: 20, leftMaring: -5 }} />
                 : <SvgIconAdd style={{ width: 20 }} />
             }

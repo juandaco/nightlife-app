@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-const yelp = require('yelp-fusion');
 const placesRouter = express.Router();
+const yelp = require('yelp-fusion');
 
 /*
   Setup Yelp Acess Token

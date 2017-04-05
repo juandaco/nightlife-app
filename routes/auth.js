@@ -13,7 +13,7 @@ function popupCloser(req, res) {
     res.sendFile(popCloser);
   } else {
     res.json({
-      message: 'Not users found'
+      message: 'Not users found',
     });
   }
 }

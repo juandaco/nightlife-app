@@ -38,7 +38,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: db })
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 app.use(passport.initialize());
@@ -55,9 +55,10 @@ app.use('/api/places', placesRouter);
   Serve the Single Page App
 */
 // app.use(express.static('public'));
-app.get('*', function(req, res) { // Catches unknown adress and redirects to SPA
-  // res.sendfile(__dirname + '/public/index.html');
-});
+// app.get('*', function(req, res) { // Catches unknown adress and redirects to SPA
+//   console.log(req.url);
+//   // res.sendfile(__dirname + '/public/index.html');
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -74,7 +75,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('error');
 });
 
 module.exports = app;
