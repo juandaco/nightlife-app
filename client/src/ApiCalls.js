@@ -51,6 +51,36 @@ function setUserSearch(lastSearch) {
     .then(parseJSON);
 }
 
+function addUserPlace(placeID) {
+   return fetch(`/api/users/add-place`, {
+    method: 'PUT',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    credentials: 'include',
+    body: JSON.stringify({
+      placeID,
+    }),
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
+function removeUserPlace(placeID) {
+   return fetch(`/api/users/remove-place`, {
+    method: 'PUT',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    credentials: 'include',
+    body: JSON.stringify({
+      placeID,
+    }),
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
 function userLogout() {
   return fetch(`/api/users/logout`, {
     accept: 'application/json',
@@ -83,6 +113,8 @@ const ApiCalls = {
   getPlaceReview,
   getUserData,
   setUserSearch,
+  addUserPlace,
+  removeUserPlace,
   verifyUser,
   userLogout,
 };

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatButton } from 'material-ui';
+import { Badge, FlatButton } from 'material-ui';
 import {
   Card,
   CardActions,
@@ -9,6 +9,7 @@ import {
 } from 'material-ui/Card';
 import SvgIconAdd from 'material-ui/svg-icons/content/add-circle';
 import SvgIconGoing from 'material-ui/svg-icons/action/check-circle';
+import SvgIconPeople from 'material-ui/svg-icons/social/people';
 import ApiCalls from '../ApiCalls';
 
 class PlaceCard extends Component {
@@ -35,7 +36,7 @@ class PlaceCard extends Component {
   }
 
   handleChange() {
-    this.props.addPlace(this.state.placeID); 
+    this.props.addPlace(this.state.placeID);
   }
 
   render() {
@@ -54,7 +55,21 @@ class PlaceCard extends Component {
         <CardText style={{ paddingTop: 5, paddingBottom: 0 }}>
           {this.state.review}
         </CardText>
-        <CardActions style={{ textAlign: 'right' }}>
+        <CardActions style={{ textAlign: 'right', paddingTop: 0}}>
+          <Badge
+            badgeContent={0}
+            secondary={true}
+            badgeStyle={{
+              fontSize: 10,
+              width: 17,
+              height: 17,
+              top: 17,
+              right: 11,
+            }}
+            style={{ bottom: -12 }}
+          >
+            <SvgIconPeople />
+          </Badge>
           <FlatButton href={this.props.url} target="_blank" label="More Info" />
           <FlatButton
             label={this.props.going ? 'Going' : 'Add'}

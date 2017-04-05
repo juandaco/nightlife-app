@@ -37,19 +37,37 @@ usersRouter.put('/search', function(req, res) {
       { _id: req.user._id },
       { $set: { lastSearch: req.body.lastSearch } },
       function(err, data) {
+        if (err) throw err;
         res.json(data);
       }
     );
   }
 });
 
-usersRouter.put('/places', function(req, res) {
-  // if (req.isAuthenticated()) {
-  //   Users.updateOne(
-  //     { _id: req.user._id },
-  //     { $}
-  //   );
-  // }
+usersRouter.put('/add-place', function(req, res) {
+  if (req.isAuthenticated()) {
+    Users.updateOne(
+      { _id: req.user._id },
+      { $push: { places: req.body.placeID } },
+      function(err, data) {
+        if (err) throw err;
+        res.json(data);
+      }
+    );
+  }
+});
+
+usersRouter.put('/remove-place', function(req, res) {
+  if (req.isAuthenticated()) {
+    Users.updateOne(
+      { _id: req.user._id },
+      { $pull: { places: req.body.placeID } },
+      function(err, data) {
+        if (err) throw err;
+        res.json(data);
+      }
+    );
+  }
 });
 
 usersRouter.get('/logout', function(req, res) {

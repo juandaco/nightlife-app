@@ -24,6 +24,7 @@ class App extends Component {
       searchValue: '',
       searching: false,
       placesData: [],
+      placesCount: [],
       userLogged: false,
       userPlaces: [],
       userLastSearch: '',
@@ -37,10 +38,20 @@ class App extends Component {
     this.handleSearchEnter = this.handleSearchEnter.bind(this);
     this.setupCards = this.setupCards.bind(this);
     this.addPlace = this.addPlace.bind(this);
+    this.getPlacesCount = this.getPlacesCount.bind(this);
   }
 
   componentDidMount() {
     this.verifyUser();
+    this.getPlacesCount();
+  }
+
+  getPlacesCount() {
+    ApiCalls.getPlacesCount()
+      .then(resp => {
+        console.log(resp);
+      })
+      .catch(e => console.log(e));
   }
 
   verifyUser() {
@@ -97,9 +108,33 @@ class App extends Component {
 
   addPlace(placeID) {
     if (this.state.userLogged) {
-      // Add to User
+      // Add Place to to User
+      if (!this.state.userPlaces.includes(placeID)) {
+        ApiCalls.addUserPlace(placeID)
+          .then(resp => {
+            if (resp.nModified) {
+              let newPlaces = this.state.userPlaces.slice();
+              newPlaces.push(placeID);
+              this.setState({
+                userPlaces: newPlaces,
+              });
+            }
+          })
+          .catch(e => console.log(e));
+      } else {
+        ApiCalls.removeUserPlace(placeID)
+          .then(resp => {
+            if (resp.nModified) {
+              let newPlaces = this.state.userPlaces.slice();
+              newPlaces.splice(newPlaces.indexOf(placeID), 1);
+              this.setState({
+                userPlaces: newPlaces,
+              });
+            }
+          })
+          .catch(e => console.log(e));
+      }
     } else {
-      // Login User
       this.loginUser();
     }
   }
@@ -152,7 +187,7 @@ class App extends Component {
             name={place.name}
             photo={place.image_url}
             url={place.url}
-            going={false}
+            going={this.state.userPlaces.includes(place.id)}
             addPlace={this.addPlace}
           />
         );
