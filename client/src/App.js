@@ -47,8 +47,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // this.verifyUser();
-    // this.getPlacesCount();
+    document.getElementById('city-search').focus();
+    this.verifyUser();
+    this.getPlacesCount();
   }
 
   getPlacesCount() {
@@ -315,9 +316,10 @@ class App extends Component {
             </p>
             <div
               className="search-field"
-              style={{ marginBottom: 40, marginRight: '2%' }}
+                style={{ marginBottom: 40, marginRight: '2%' }}
             >
               <TextField
+                id="city-search"
                 hintText="What's your City?"
                 value={this.state.searchValue}
                 onChange={this.handleSearchChange}
