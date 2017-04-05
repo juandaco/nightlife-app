@@ -2,6 +2,34 @@ html,
 body {
   padding: 0; }
 
+#title-container {
+  display: flex;
+  width: 39vw;
+  min-width: 320px;
+  margin-bottom: 30px;
+  align-items: center;
+  justify-content: space-around; }
+
+#title-icon {
+  position: relative;
+  width: 10vw !important;
+  min-width: 80px;
+  height: 10vw !important;
+  min-height: 80px;
+  margin-right: -18px; }
+
+#nightlife-title {
+  font-family: 'Timmana', sans-serif;
+  font-size: 8vw;
+  display: inline-block;
+  transform: rotate(-12deg); }
+  @media (max-width: 775px) {
+    #nightlife-title {
+      font-size: 62px; } }
+  @media (min-width: 1875px) {
+    #nightlife-title {
+      font-size: 150px; } }
+
 .cards-container {
   display: flex;
   width: 80vw;

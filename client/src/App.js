@@ -10,6 +10,7 @@ injectTapEventPlugin();
 import { CircularProgress, TextField } from 'material-ui';
 // Icons
 import SvgIconSearch from 'material-ui/svg-icons/action/search';
+import SvgIconDrink from 'material-ui/svg-icons/maps/local-bar';
 
 //
 import ApiCalls from './ApiCalls';
@@ -46,8 +47,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.verifyUser();
-    this.getPlacesCount();
+    // this.verifyUser();
+    // this.getPlacesCount();
   }
 
   getPlacesCount() {
@@ -249,7 +250,6 @@ class App extends Component {
         found
           ? (peopleCount = this.state.placesCount[indexInPlaceCount].people)
           : (peopleCount = 0);
-
         return (
           <PlaceCard
             key={place.id}
@@ -277,13 +277,18 @@ class App extends Component {
           style={{
             margin: 0,
             padding: 0,
-            paddingTop: 100,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
+          <div id="title-container">
+            <SvgIconDrink id="title-icon" />
+            <h1 id="nightlife-title">
+              Nightlife!
+            </h1>
+          </div>
           <div className="search-field" style={{ marginBottom: 40 }}>
             <TextField
               hintText="What's your City?"
