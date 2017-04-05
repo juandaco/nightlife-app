@@ -10,6 +10,14 @@ function getPlacesData(location) {
     .then(parseJSON);
 }
 
+function getPlacesCount() {
+  return fetch(`/api/places/count`, {
+    accept: 'application/json',
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
 function getPlaceReview(placeID) {
   return fetch(`/api/places/${placeID}`, {
     accept: 'application/json',
@@ -17,6 +25,37 @@ function getPlaceReview(placeID) {
     .then(checkStatus)
     .then(parseJSON);
 }
+
+function addPeople2Place(placeID) {
+  return fetch(`/api/places/count/add`, {
+    method: 'PUT',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    credentials: 'include',
+    body: JSON.stringify({
+      placeID,
+    }),
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
+function reducePeopleFromPlace(placeID) {
+  return fetch(`/api/places/count/reduce`, {
+    method: 'PUT',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    credentials: 'include',
+    body: JSON.stringify({
+      placeID,
+    }),
+  })
+    .then(checkStatus)
+    .then(parseJSON);
+}
+
 
 function verifyUser() {
   return fetch(`/api/users/current`, {
@@ -52,7 +91,7 @@ function setUserSearch(lastSearch) {
 }
 
 function addUserPlace(placeID) {
-   return fetch(`/api/users/add-place`, {
+  return fetch(`/api/users/add-place`, {
     method: 'PUT',
     headers: new Headers({
       'Content-Type': 'application/json',
@@ -67,7 +106,7 @@ function addUserPlace(placeID) {
 }
 
 function removeUserPlace(placeID) {
-   return fetch(`/api/users/remove-place`, {
+  return fetch(`/api/users/remove-place`, {
     method: 'PUT',
     headers: new Headers({
       'Content-Type': 'application/json',
@@ -110,11 +149,14 @@ function parseJSON(response) {
 
 const ApiCalls = {
   getPlacesData,
+  getPlacesCount,
   getPlaceReview,
   getUserData,
   setUserSearch,
   addUserPlace,
   removeUserPlace,
+  addPeople2Place,
+  reducePeopleFromPlace,
   verifyUser,
   userLogout,
 };

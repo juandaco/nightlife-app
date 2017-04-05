@@ -57,7 +57,7 @@ class PlaceCard extends Component {
         </CardText>
         <CardActions style={{ textAlign: 'right', paddingTop: 0}}>
           <Badge
-            badgeContent={0}
+            badgeContent={this.props.peopleCount}
             secondary={true}
             badgeStyle={{
               fontSize: 10,

@@ -49,7 +49,9 @@ class App extends Component {
   getPlacesCount() {
     ApiCalls.getPlacesCount()
       .then(resp => {
-        console.log(resp);
+        this.setState({
+          placesCount: resp,
+        });
       })
       .catch(e => console.log(e));
   }
@@ -121,6 +123,27 @@ class App extends Component {
             }
           })
           .catch(e => console.log(e));
+        ApiCalls.addPeople2Place(placeID).then(resp => {
+          if (resp.nModified || resp.upserted.length) {
+            let newPlacesCount = this.state.placesCount.slice();
+            let indexOfPlace;
+            const place = newPlacesCount.find((place, index) => {
+              indexOfPlace = index;
+              return place.placeID === placeID;
+            });
+            if (place) {
+              newPlacesCount[indexOfPlace].people++;
+            } else {
+              newPlacesCount.push({
+                placeID,
+                people: 1,
+              });
+            }
+            this.setState({
+              placesCount: newPlacesCount,
+            });
+          }
+        });
       } else {
         ApiCalls.removeUserPlace(placeID)
           .then(resp => {
@@ -130,6 +153,24 @@ class App extends Component {
               this.setState({
                 userPlaces: newPlaces,
               });
+            }
+          })
+          .catch(e => console.log(e));
+        ApiCalls.reducePeopleFromPlace(placeID)
+          .then(resp => {
+            if (resp.nModified) {
+              let newPlacesCount = this.state.placesCount.slice();
+              let indexOfPlace;
+              const place = newPlacesCount.find((place, index) => {
+                indexOfPlace = index;
+                return place.placeID === placeID;
+              });
+              if (place) {
+                newPlacesCount[indexOfPlace].people--;
+                this.setState({
+                  placesCount: newPlacesCount,
+                });
+              }
             }
           })
           .catch(e => console.log(e));
@@ -180,6 +221,16 @@ class App extends Component {
   setupCards() {
     if (!this.state.searching) {
       return this.state.placesData.map(place => {
+        let peopleCount;
+        let indexInPlaceCount;
+        const found = this.state.placesCount.find((item, index) => {
+          indexInPlaceCount = index;
+          return item.placeID === place.id;
+        });
+        found
+          ? (peopleCount = this.state.placesCount[indexInPlaceCount].people)
+          : (peopleCount = 0);
+
         return (
           <PlaceCard
             key={place.id}
@@ -189,6 +240,7 @@ class App extends Component {
             url={place.url}
             going={this.state.userPlaces.includes(place.id)}
             addPlace={this.addPlace}
+            peopleCount={peopleCount}
           />
         );
       });
