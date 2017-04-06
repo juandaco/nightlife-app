@@ -54,11 +54,7 @@ app.use('/api/places', placesRouter);
 /*
   Serve the Single Page App
 */
-// app.use(express.static('public'));
-// app.get('*', function(req, res) { // Catches unknown adress and redirects to SPA
-//   console.log(req.url);
-//   // res.sendfile(__dirname + '/public/index.html');
-// });
+app.use(express.static('public'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
