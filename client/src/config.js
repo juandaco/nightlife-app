@@ -1,3 +1,3 @@
 export default {
-  appURL: 'http://localhost:3001'
+  appURL: 'https://nightlife-fcc-app.herokuapp.com'
 };
